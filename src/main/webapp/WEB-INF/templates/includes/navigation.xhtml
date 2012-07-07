@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <h:form id="navigationForm">  
+            <p:toolbar>
+                <p:toolbarGroup align="left">
+                    <p:commandButton value="#{i18n['menuitem.label.connect']}" title="#{i18n['menuitem.label.connect']}" icon="connect" actionListener="#{mainBean.showConnectionDialog}" update=":messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm" onclick="connectionDialog.show();" disabled="#{not mainBean.showConnect}"/>
+                    <p:commandButton value="#{i18n['menuitem.label.disconnect']}" title="#{i18n['menuitem.label.disconnect']}" icon="disconnect" actionListener="#{mainBean.showDisconnectionDialog}" update=":messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm :connectionDialogForm" onclick="disconnectionConfirmDialog.show();" disabled="#{not mainBean.showDisconnect}"/>
+
+                    <p:separator />
+
+                    <p:commandButton value="#{i18n['menuitem.label.sendMessage']}" title="#{i18n['menuitem.label.sendMessage']}" icon="send_message" actionListener="#{mainBean.showSendMessageDialog}" update=":messages :statusAreaMessages :receiveMessageDialogForm :connectionDialogForm" onclick="sendMessageDialog.show();" disabled="#{not mainBean.showSend}"/>
+                    <p:commandButton value="#{i18n['menuitem.label.receiveMessage']}" title="#{i18n['menuitem.label.receiveMessage']}" icon="message_receive" actionListener="#{mainBean.showReceiveMessageDialog}" update=":messages :statusAreaMessages :sendMessageDialogForm :connectionDialogForm" onclick="receiveMessageDialog.show();" disabled="#{not mainBean.showReceive}"/>
+                    <p:commandButton value="#{i18n['menuitem.label.stopMessageReceiver']}" title="#{i18n['menuitem.label.stopMessageReceiver']}" icon="stop_receiver" actionListener="#{mainBean.stopMessageReceiver}" update=":messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm :connectionDialogForm @form" disabled="#{not mainBean.showReceiveStop}"/>
+
+                    <p:separator />
+
+                    <p:commandButton value="#{i18n['menuitem.label.clearReceivedMessageTable']}" title="#{i18n['menuitem.label.clearReceivedMessageTable']}" icon="message_delete" actionListener="#{mainBean.clearMessages}" update=":messagesForm:messageTable :messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm :connectionDialogForm @form"/>
+
+                    <p:separator />
+
+                    <p:commandButton value="#{i18n['button.refresh.messages']}" title="#{i18n['button.refresh.messages']}" icon="ui-icon-refresh" actionListener="#{mainBean.updateMessagesTable}" update=":messagesForm:messageTable :messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm :connectionDialogForm @form"/>
+                </p:toolbarGroup>
+                <p:toolbarGroup align="right">
+                    <p:commandButton value="#{i18n['label.startAutoUpdater']}" icon="ui-icon-play" onclick="poll.start();" actionListener="#{mainBean.startPoll}" update=":messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm :connectionDialogForm @form" disabled="#{mainBean.autoUpdateMessages}"/>
+                    <p:commandButton value="#{i18n['label.stopAutoUpdater']}" icon="ui-icon-pause" onclick="poll.stop();" actionListener="#{mainBean.stopPoll}" update=":messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm :connectionDialogForm @form" disabled="#{not mainBean.autoUpdateMessages}"/>
+                </p:toolbarGroup>
+            </p:toolbar>
+        </h:form>
+    </ui:composition>
+</html>

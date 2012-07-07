@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <h:form id="createMapMessageDialogForm">
+            <p:dialog header="#{i18n['button.create.message']}" id="createMapMessageDialogId" widgetVar="createMapMessageDialog" resizable="false" modal="true" visible="#{facesContext.validationFailed}">
+                <p:ajax event="close" update=":messages :statusAreaMessages" listener="#{mainBean.handleCloseCreateMapMessage}"/>
+
+                <p:panelGrid id="editGridId" styleClass="main-dialog">
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['mapMessageItem.type']}:" /></p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{mainBean.selectedMapMessage.type}" required="true" label="#{i18n['mapMessageItem.type']}">
+                                <f:selectItem itemLabel="#{i18n['button.select']}" itemValue="" />  
+                                <f:selectItems value="#{mainBean.propertyTypes}" 
+                                               var="propertyType" itemValue="#{propertyType}" itemLabel="#{i18n[propertyType]}" />
+                                <p:ajax update=":createMapMessageDialogForm:editGridId :messages :statusAreaMessages" process="@this" listener="#{mainBean.handleChange}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['mapMessageItem.name']}:"/></p:column>
+                        <p:column><p:inputText value="#{mainBean.selectedMapMessage.name}" required="true" label="#{i18n['mapMessageItem.name']}"/></p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['mapMessageItem.value']}:"/></p:column>
+                        <p:column>
+                            <p:calendar value="#{mainBean.selectedMapMessage.value}" required="true" pattern="#{i18n['application.pattern.timestamp']}" rendered="#{mainBean.selectedMapMessage.type eq 'DATE_TIME'}" locale="#{localeBean.locale}" navigator="true">
+                                <f:converter converterId="com.jms.client.converter.DateConverter" />
+                            </p:calendar>
+                            <p:inputTextarea value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" cols="80" rows="10" autoResize="false" rendered="#{mainBean.selectedMapMessage.type eq 'OBJECT'}"/>
+                            <p:inputTextarea value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" cols="80" rows="10" autoResize="false" rendered="#{mainBean.selectedMapMessage.type eq 'STRING'}"/>
+                            <p:inputText value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" rendered="#{mainBean.selectedMapMessage.type eq 'DOUBLE'}">
+                                <f:converter converterId="javax.faces.Double" />
+                            </p:inputText>
+                            <p:inputText value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" rendered="#{mainBean.selectedMapMessage.type eq 'FLOAT'}">
+                                <f:converter converterId="javax.faces.Float" />
+                            </p:inputText>
+                            <p:inputText value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" rendered="#{mainBean.selectedMapMessage.type eq 'LONG'}">
+                                <f:converter converterId="javax.faces.Long" />
+                            </p:inputText>
+                            <p:inputText value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" rendered="#{mainBean.selectedMapMessage.type eq 'INT'}">
+                                <f:converter converterId="javax.faces.Integer" />
+                            </p:inputText>
+                            <p:inputText value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" rendered="#{mainBean.selectedMapMessage.type eq 'CHAR'}">
+                                <f:converter converterId="javax.faces.Character" />
+                            </p:inputText>
+                            <p:inputText value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" rendered="#{mainBean.selectedMapMessage.type eq 'SHORT'}">
+                                <f:converter converterId="javax.faces.Short" />
+                            </p:inputText>
+                            <p:inputText value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" rendered="#{mainBean.selectedMapMessage.type eq 'BYTE'}">
+                                <f:converter converterId="javax.faces.Byte" />
+                            </p:inputText>
+                            <p:selectBooleanCheckbox value="#{mainBean.selectedMapMessage.value}" required="true" label="#{i18n['mapMessageItem.value']}" rendered="#{mainBean.selectedMapMessage.type eq 'BOOLEAN'}"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column colspan="2">
+                            <p:commandButton value="#{i18n['button.reset']}" title="#{i18n['button.reset']}" type="reset"/>
+
+                            <p:spacer height="10" />
+
+                            <p:commandButton value="#{i18n['button.add']}" title="#{i18n['button.add']}" update=":createMapMessageDialogForm:editGridId :createMapMessageDialogForm:mapMessagesPanel :sendMessageDialogForm:display :messages :statusAreaMessages" process=":createMapMessageDialogForm:editGridId" action="#{mainBean.reinitMapMessage}">
+                                <p:collector value="#{mainBean.selectedMapMessage}" addTo="#{mainBean.messageToSend.mapBodyItems}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+
+                <br />
+
+                <p:outputPanel id="mapMessagesPanel">
+                    <p:dataTable value="#{mainBean.messageToSend.mapBodyItems}" var="mapMessage" paginator="true" rows="4"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{i18n['mapMessageItem.name']}" />
+                            </f:facet>
+                            <h:outputText value="#{mapMessage.name}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{i18n['mapMessageItem.value']}" />
+                            </f:facet>
+                            <h:outputText value="#{mapMessage.value}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{i18n['mapMessageItem.type']}" />
+                            </f:facet>
+                            <h:outputText value="#{i18n[mapMessage.type]}" />
+                        </p:column>
+
+                        <p:column styleClass="center-align">
+                            <f:facet name="header">
+                                <h:outputText value="#{i18n['data.label.actions']}" />
+                            </f:facet>
+                            <p:commandLink value="[&nbsp;#{i18n['button.remove']}&nbsp;]" title="#{i18n['button.remove']}" update=":createMapMessageDialogForm:editGridId :createMapMessageDialogForm:mapMessagesPanel :sendMessageDialogForm:display :messages :statusAreaMessages" process=":createMapMessageDialogForm:mapMessagesPanel">
+                                <p:collector value="#{mapMessage}" removeFrom="#{mainBean.messageToSend.mapBodyItems}"/>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+    </ui:composition>
+</html>

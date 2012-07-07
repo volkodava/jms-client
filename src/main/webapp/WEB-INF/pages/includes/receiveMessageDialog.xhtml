@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <h:form id="receiveMessageDialogForm">
+            <p:dialog header="#{i18n['menuitem.label.receiveMessage']}" id="receiveMessageDialogId" widgetVar="receiveMessageDialog" resizable="false" modal="true" closable="false" visible="#{facesContext.validationFailed}">
+                <p:ajax event="close" update=":messages :statusAreaMessages" listener="#{mainBean.handleCloseReceiveMessageDialog}"/>
+
+                <p:panelGrid id="display" styleClass="main-dialog">
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['message.destinationType']}:" /></p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{mainBean.receiver.destinationType}" required="true" label="#{i18n['message.destinationType']}">
+                                <f:selectItem itemLabel="#{i18n['button.select']}" itemValue="" />  
+                                <f:selectItems value="#{mainBean.destinationTypes}" 
+                                               var="destinationType" itemValue="#{destinationType}" itemLabel="#{i18n[destinationType]}" />
+                                <p:ajax update=":messages :statusAreaMessages" listener="#{mainBean.handleChange}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['receiver.acknowledgeMode']}:" /></p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{mainBean.receiver.acknowledgeMode}" required="true" label="#{i18n['receiver.acknowledgeMode']}">
+                                <f:selectItem itemLabel="#{i18n['button.select']}" itemValue="" />  
+                                <f:selectItems value="#{mainBean.acknowledgeModes}" 
+                                               var="acknowledgeMode" itemValue="#{acknowledgeMode}" itemLabel="#{i18n[acknowledgeMode]}" />
+                                <p:ajax update=":messages :statusAreaMessages" listener="#{mainBean.handleChange}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['message.destinationName']}:" /></p:column>
+                        <p:column>
+                            <p:inputText value="#{mainBean.receiver.destinationName}" required="true" label="#{i18n['message.destinationName']}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="#{i18n['receiver.selector']}:" /></p:column>
+                        <p:column>
+                            <p:inputText value="#{mainBean.receiver.selector}" label="#{i18n['receiver.selector']}" />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+
+                <br />
+
+                <p:commandButton id="receiveMessageButton" value="#{i18n['button.receive']}" title="#{i18n['button.receive']}" icon="ui-icon-check" actionListener="#{mainBean.receiveMessage}" update=":messages :statusAreaMessages :sendMessageDialogForm:sendMessageButton :sendMessageDialogForm:setMessageHeadersButton :sendMessageDialogForm:setMessagePropertiesButton :receiveMessageDialogForm :connectionDialogForm:connectionButton :connectionDialogForm:connectionPropertiesButton :navigationForm :headerInfo" process="@form" disabled="#{not mainBean.showReceive}"/>
+
+                <p:spacer height="10" />
+
+                <p:commandButton value="#{i18n['button.cancel']}" title="#{i18n['button.cancel']}" icon="ui-icon-close" onclick="receiveMessageDialog.hide();" actionListener="#{mainBean.cancelReceiveMessage}" update=":messages :statusAreaMessages :sendMessageDialogForm:sendMessageButton :sendMessageDialogForm:setMessageHeadersButton :sendMessageDialogForm:setMessagePropertiesButton :receiveMessageDialogForm :connectionDialogForm:connectionButton :connectionDialogForm:connectionPropertiesButton :navigationForm :headerInfo" immediate="true"/>
+            </p:dialog>
+        </h:form>
+    </ui:composition>
+</html>

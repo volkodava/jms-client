@@ -1,0 +1,35 @@
+syntax: glob
+*.DS_Store
+*~.*
+*.~*
+*.*~
+*.ec
+# eclipse settings
+.metadata/
+.svn/
+Servers/
+RemoteSystemsTempFiles/
+ProfileProject/
+# java directories with compiled class
+classes/
+build/
+dist/
+target/
+maven_repo/
+database/
+activemq-*/
+
+syntax: regexp
+.*\.[Tt][Mm][Pp]$
+.*\.[Ll][Oo][Gg]$
+.*\.[Ss][Ww][Pp]$
+.*\.[Bb][Aa][Kk]$
+.*\.[Ll][Cc][Kk]$
+# java compiled class files
+.*\.[Cc][Ll][Aa][Ss][Ss]$
+# other binary
+.*\.[Ee][Xx][Ee]$
+.*\.[Dd][Ll][Ll]$
+.*\.[Zz][Ii][Pp]$
+.*\.[Rr][Aa][Rr]$
+.*\.[Pp][Dd][Ff]$

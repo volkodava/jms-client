@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <h:form id="disconnectionConfirmDialogForm">
+            <p:confirmDialog id="disconnectionConfirmDialogId" header="#{i18n['menuitem.label.disconnect']}" severity="alert" widgetVar="disconnectionConfirmDialog" visible="#{facesContext.validationFailed}">
+                <f:facet name="message">
+                    <h:outputText value="#{i18n['label.message.confirm.disconnect']}" escape="false"/>
+                </f:facet>
+
+                <p:commandButton value="#{i18n['button.yes']}" title="#{i18n['button.yes']}" icon="ui-icon-check" actionListener="#{mainBean.disconnect}" update=":messagesForm:messageTable :messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm :connectionDialogForm :navigationForm :headerInfo @form"/>
+
+                <p:spacer height="10" />
+
+                <p:commandButton value="#{i18n['button.no']}" title="#{i18n['button.no']}" icon="ui-icon-close" onclick="disconnectionConfirmDialog.hide();" actionListener="#{mainBean.cancelDisconnect}" update=":messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm :connectionDialogForm :navigationForm @form" immediate="true"/>
+            </p:confirmDialog>  
+        </h:form>
+    </ui:composition>
+</html>

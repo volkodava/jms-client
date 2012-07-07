@@ -1,0 +1,2 @@
+- Error when set DateTime with TimeZone by p:calendar
+http://forum.primefaces.org/viewtopic.php?f=3&t=17586

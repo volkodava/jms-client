@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <h:form id="createConnectionAdvancedPropertyDialogForm">
+            <p:dialog header="#{i18n['connection.propertyList']}" id="createConnectionAdvancedPropertyDialogId" widgetVar="createConnectionAdvancedPropertyDialog" resizable="false" modal="true" visible="#{facesContext.validationFailed}">
+                <p:ajax event="close" update=":messages :statusAreaMessages" listener="#{mainBean.handleCloseCreateConnectionAdvancedProperty}"/>
+
+                <p:panelGrid id="editGridId" styleClass="main-dialog">
+                    <p:row>  
+                        <p:column><h:outputText value="#{i18n['jmsProperty.type']}:" /></p:column>
+                        <p:column><h:outputText value="#{i18n[mainBean.selectedConnectionAdvancedProperty.type]}" /></p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['jmsProperty.name']}:"/></p:column>
+                        <p:column><p:inputText value="#{mainBean.selectedConnectionAdvancedProperty.name}" required="true" label="#{i18n['jmsProperty.name']}"/></p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['jmsProperty.value']}:"/></p:column>
+                        <p:column>
+                            <p:inputText value="#{mainBean.selectedConnectionAdvancedProperty.value}" required="true" label="#{i18n['jmsProperty.value']}"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column colspan="2">
+                            <p:commandButton value="#{i18n['button.reset']}" title="#{i18n['button.reset']}" type="reset"/>
+
+                            <p:spacer height="10" />
+
+                            <p:commandButton value="#{i18n['button.add']}" title="#{i18n['button.add']}" update=":createConnectionAdvancedPropertyDialogForm:editGridId :createConnectionAdvancedPropertyDialogForm:connectionPropertiesPanel :connectionDialogForm:display :messages :statusAreaMessages" process=":createConnectionAdvancedPropertyDialogForm:editGridId" action="#{mainBean.reinitConnectionProperties}">
+                                <p:collector value="#{mainBean.selectedConnectionAdvancedProperty}" addTo="#{mainBean.connection.propertyList}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+
+                <br />
+
+                <p:outputPanel id="connectionPropertiesPanel">
+                    <p:dataTable value="#{mainBean.connection.propertyList}" var="connectionProperty" paginator="true" rows="4"
+                                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}">
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{i18n['jmsProperty.name']}" />
+                            </f:facet>
+                            <h:outputText value="#{connectionProperty.name}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{i18n['jmsProperty.value']}" />
+                            </f:facet>
+                            <h:outputText value="#{connectionProperty.value}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{i18n['jmsProperty.type']}" />
+                            </f:facet>
+                            <h:outputText value="#{i18n[connectionProperty.type]}" />
+                        </p:column>
+
+                        <p:column styleClass="center-align">
+                            <f:facet name="header">
+                                <h:outputText value="#{i18n['data.label.actions']}" />
+                            </f:facet>
+                            <p:commandLink value="[&nbsp;#{i18n['button.remove']}&nbsp;]" title="#{i18n['button.remove']}" update=":createConnectionAdvancedPropertyDialogForm:editGridId :createConnectionAdvancedPropertyDialogForm:connectionPropertiesPanel :connectionDialogForm:display :messages :statusAreaMessages" process=":createConnectionAdvancedPropertyDialogForm:connectionPropertiesPanel">
+                                <p:collector value="#{connectionProperty}" removeFrom="#{mainBean.connection.propertyList}"/>
+                            </p:commandLink>
+                        </p:column>
+                    </p:dataTable>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+    </ui:composition>
+</html>

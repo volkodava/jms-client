@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+    <connections>
+        <recents>
+            <initialContextFactories>
+                <initialContextFactory value="org.apache.activemq.jndi.ActiveMQInitialContextFactory" />
+                <initialContextFactory value="org.jnp.interfaces.NamingContextFactory" />
+            </initialContextFactories>
+        </recents>
+    </connections>
+</application>

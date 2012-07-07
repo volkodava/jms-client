@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <h:form id="sendMessageDialogForm">
+            <p:dialog header="#{i18n['menuitem.label.sendMessage']}" id="sendMessageDialogId" widgetVar="sendMessageDialog" resizable="false" modal="true" closable="false" visible="#{facesContext.validationFailed}">
+                <p:ajax event="close" update=":messages :statusAreaMessages" listener="#{mainBean.handleCloseSendMessageDialog}"/>
+
+                <p:panelGrid id="display" styleClass="main-dialog">
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['message.type']}:" /></p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{mainBean.messageToSend.type}" required="true" label="#{i18n['message.type']}">
+                                <f:selectItem itemLabel="#{i18n['button.select']}" itemValue="" />  
+                                <f:selectItems value="#{mainBean.messageTypes}" 
+                                               var="messageType" itemValue="#{messageType}" itemLabel="#{i18n[messageType]}" />
+                                <p:ajax update=":sendMessageDialogForm:display :messages :statusAreaMessages" listener="#{mainBean.handleChange}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['message.destinationType']}:" /></p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{mainBean.messageToSend.destinationType}" required="true" label="#{i18n['message.destinationType']}">
+                                <f:selectItem itemLabel="#{i18n['button.select']}" itemValue="" />  
+                                <f:selectItems value="#{mainBean.destinationTypes}" 
+                                               var="destinationType" itemValue="#{destinationType}" itemLabel="#{i18n[destinationType]}" />
+                                <p:ajax update=":messages :statusAreaMessages" listener="#{mainBean.handleChange}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['message.deliveryMode']}:" /></p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{mainBean.messageToSend.deliveryMode}" required="true" label="#{i18n['message.deliveryMode']}">
+                                <f:selectItem itemLabel="#{i18n['button.select']}" itemValue="" />  
+                                <f:selectItems value="#{mainBean.deliveryModes}" 
+                                               var="deliveryMode" itemValue="#{deliveryMode}" itemLabel="#{i18n[deliveryMode]}" />
+                                <p:ajax update=":messages :statusAreaMessages" listener="#{mainBean.handleChange}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['message.transactionType']}:" /></p:column>
+                        <p:column>
+                            <p:selectOneMenu value="#{mainBean.messageToSend.transactionType}" required="true" label="#{i18n['message.transactionType']}">
+                                <f:selectItem itemLabel="#{i18n['button.select']}" itemValue="" />  
+                                <f:selectItems value="#{mainBean.transactionTypes}" 
+                                               var="transactionType" itemValue="#{transactionType}" itemLabel="#{i18n[transactionType]}" />
+                                <p:ajax update=":messages :statusAreaMessages" listener="#{mainBean.handleChange}" />
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['message.destinationName']}:" /></p:column>
+                        <p:column>
+                            <p:inputText value="#{mainBean.messageToSend.destinationName}" required="true" label="#{i18n['message.destinationName']}" />
+                        </p:column>
+                    </p:row>
+
+                    <p:row id="messageBodyRow">
+                        <p:column><h:outputText value="#{i18n['message.body']}:" /></p:column>
+                        <p:column>
+                            <h:panelGroup rendered="#{mainBean.messageToSend.type eq 'MAP'}">
+                                <p:commandButton value="#{i18n['button.create.message']}" title="#{i18n['button.create.message']}" icon="ui-icon-plus" onclick="createMapMessageDialog.show();" update=":statusAreaMessages :createMapMessageDialogForm:mapMessagesPanel"/>
+                                <p:spacer height="10" />
+                                <h:outputFormat value="#{i18n['label.mapMessage.item.count']}" styleClass="important">
+                                    <f:param value="#{mainBean.messageToSend.mapBodyItems.size()}"/>
+                                </h:outputFormat>
+                            </h:panelGroup>
+
+                            <h:panelGroup rendered="#{mainBean.messageToSend.type ne 'MAP'}">
+                                <p:inputTextarea value="#{mainBean.messageToSend.simpleBody}" label="#{i18n['message.body']}" cols="80" rows="10" autoResize="false"/>
+                            </h:panelGroup>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+
+                <br />
+
+                <p:commandButton id="sendMessageButton" value="#{i18n['button.send']}" title="#{i18n['button.send']}" icon="ui-icon-check" actionListener="#{mainBean.sendMessage}" update=":messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm:receiveMessageButton :connectionDialogForm:connectionButton :connectionDialogForm:connectionPropertiesButton :navigationForm :headerInfo" process="@form" disabled="#{not mainBean.showSend}"/>
+
+                <p:spacer height="10" />
+
+                <p:commandButton value="#{i18n['button.cancel']}" title="#{i18n['button.cancel']}" icon="ui-icon-close" onclick="sendMessageDialog.hide();" actionListener="#{mainBean.cancelSendMessage}" update=":messages :statusAreaMessages :sendMessageDialogForm :receiveMessageDialogForm:receiveMessageButton :connectionDialogForm:connectionButton :connectionDialogForm:connectionPropertiesButton :navigationForm :headerInfo" immediate="true"/>
+
+                <p:spacer height="30" />
+
+                <p:commandButton id="setMessageHeadersButton" value="#{i18n['message.headers']}" title="#{i18n['message.headers']}" icon="message_header" onclick="createMessageHeadersDialog.show();" disabled="#{not mainBean.showSend}" update=":statusAreaMessages :createMessageHeadersDialogForm:messageHeadersPanel"/>
+
+                <p:spacer height="10" />
+
+                <p:commandButton id="setMessagePropertiesButton" value="#{i18n['message.properties']}" title="#{i18n['message.properties']}" icon="message_property" onclick="createMessagePropertiesDialog.show();" disabled="#{not mainBean.showSend}" update=":statusAreaMessages :createMessagePropertiesDialogForm:messagePropertiesPanel"/>
+            </p:dialog>
+        </h:form>
+    </ui:composition>
+</html>

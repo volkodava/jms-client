@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+        <h:form id="connectionDialogForm">
+            <p:dialog header="#{i18n['menuitem.label.connect']}" id="connectionDialogId" widgetVar="connectionDialog" resizable="false" modal="true" closable="false" visible="#{facesContext.validationFailed}">
+                <p:ajax event="close" update=":messages :statusAreaMessages" listener="#{mainBean.handleCloseConnectionDialog}"/>
+
+                <p:panelGrid id="display" styleClass="main-dialog">
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['connection.initialContextFactory']}:" /></p:column>
+                        <p:column>
+                            <p:autoComplete value="#{mainBean.connection.initialContextFactory}" completeMethod="#{mainBean.completeInitialContextFactory}" required="true" label="#{i18n['connection.initialContextFactory']}"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['connection.connectionFactoryName']}:" /></p:column>
+                        <p:column>
+                            <p:inputText value="#{mainBean.connection.connectionFactoryName}" required="true" label="#{i18n['connection.connectionFactoryName']}"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="*&nbsp;#{i18n['connection.url']}:" /></p:column>
+                        <p:column>
+                            <p:inputText value="#{mainBean.connection.url}" required="true" label="#{i18n['connection.url']}"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="#{i18n['client.name']}:" /></p:column>
+                        <p:column>
+                            <p:inputText value="#{mainBean.connection.client.name}" label="#{i18n['client.name']}"/>
+                        </p:column>
+                    </p:row>
+
+                    <p:row>  
+                        <p:column><h:outputText value="#{i18n['client.password']}:" /></p:column>
+                        <p:column>
+                            <p:password id="clientPasswordId" value="#{mainBean.connection.client.password}" feedback="true"
+                                        promptLabel="#{i18n['label.enterPassword']}" label="#{i18n['client.password']}" />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+
+                <br />
+
+                <p:commandButton id="connectionButton" value="#{i18n['button.connect']}" title="#{i18n['button.connect']}" icon="ui-icon-check" actionListener="#{mainBean.connect}" update=":messages :statusAreaMessages :sendMessageDialogForm:sendMessageButton :sendMessageDialogForm:setMessageHeadersButton :sendMessageDialogForm:setMessagePropertiesButton :receiveMessageDialogForm:receiveMessageButton :connectionDialogForm :navigationForm :headerInfo" process="@form" disabled="#{not mainBean.showConnect}"/>
+
+                <p:spacer height="10" />
+
+                <p:commandButton value="#{i18n['button.cancel']}" title="#{i18n['button.cancel']}" icon="ui-icon-close" onclick="connectionDialog.hide();" actionListener="#{mainBean.cancelConnect}" update=":messages :statusAreaMessages :sendMessageDialogForm:sendMessageButton :sendMessageDialogForm:setMessageHeadersButton :sendMessageDialogForm:setMessagePropertiesButton :receiveMessageDialogForm:receiveMessageButton :connectionDialogForm :navigationForm :headerInfo" immediate="true"/>
+
+                <p:spacer height="30" />
+
+                <p:commandButton id="connectionPropertiesButton" value="#{i18n['connection.propertyList']}" title="#{i18n['connection.propertyList']}" icon="message_property" onclick="createConnectionAdvancedPropertyDialog.show();" disabled="#{not mainBean.showConnect}" update=":statusAreaMessages :createConnectionAdvancedPropertyDialogForm:connectionPropertiesPanel"/>
+            </p:dialog>
+        </h:form>
+    </ui:composition>
+</html>

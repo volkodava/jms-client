@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html" locale="#{localeBean.locale}">
+
+        <h:head>
+            <f:facet name="first">
+                <title><ui:insert name="title" /></title>
+                <meta name="author" content="Anatolii Volkodav" />
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                <meta http-equiv="cache-control"
+                      content="no-cache, no-store, must-revalidate, max-age=0" />
+                <meta http-equiv="pragma" content="no-cache" />
+            </f:facet>
+
+            <meta http-equiv='refresh'
+                  content="#{session.maxInactiveInterval}; URL=#{request.requestURI}" />
+
+            <h:outputStylesheet name="style.css" library="css" />
+            <link href="#{request.contextPath}/resources/images/favicon.ico" rel="icon" type="image/x-icon" />
+
+            <style type="text/css">
+                DIV.ui-layout-unit.ui-widget.ui-widget-content.ui-corner-all.ui-layout-north.ui-layout-pane.ui-layout-pane-north DIV.ui-layout-unit-content.ui-widget-content {
+                    overflow: hidden !important;
+                }
+                DIV.ui-layout-unit.ui-widget.ui-widget-content.ui-corner-all.ui-layout-south.ui-layout-pane.ui-layout-pane-south DIV.ui-layout-unit-content.ui-widget-content {
+                    overflow-x: hidden !important;
+                }
+                .connect {
+                    background-image: url('#{request.contextPath}/resources/images/connect.png') !important;
+                }
+                .disconnect {
+                    background-image: url('#{request.contextPath}/resources/images/disconnect.png') !important;
+                }
+                .message_delete {
+                    background-image: url('#{request.contextPath}/resources/images/message_delete.png') !important;
+                }
+                .message_receive {
+                    background-image: url('#{request.contextPath}/resources/images/message_receive.png') !important;
+                }
+                .send_message {
+                    background-image: url('#{request.contextPath}/resources/images/send_message.png') !important;
+                }
+                .stop_receiver {
+                    background-image: url('#{request.contextPath}/resources/images/stop_receiver.png') !important;
+                }
+                .message_header {
+                    background-image: url('#{request.contextPath}/resources/images/message_header.png') !important;
+                }
+                .message_property {
+                    background-image: url('#{request.contextPath}/resources/images/message_property.png') !important;
+                }
+            </style>
+
+            <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+
+            <ui:insert name="head" />
+        </h:head>
+
+        <h:body>
+            <h:form id="pollForm" styleClass="hidden-element">
+                <p:poll interval="2" update=":messagesForm:messageTable :statusAreaMessages" widgetVar="poll" autoStart="false" listener="#{mainBean.updateMessagesTable}"/>
+            </h:form>
+
+            <p:growl id="messages" />
+
+            <p:layout fullPage="true">
+                <p:ajax event="resize" update=":statusAreaMessages" />
+
+                <p:layoutUnit position="north">
+                    <ui:include src="/WEB-INF/templates/includes/navigation.xhtml"/>
+                </p:layoutUnit>
+
+                <p:layoutUnit header="#{i18n['label.statusArea.title']}" position="south" minSize="80" size="90" resizable="true" collapsible="true">
+                    <ui:include src="/WEB-INF/templates/includes/footer.xhtml"/>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <p:ajaxStatus styleClass="ajax-status" id="ajaxStatusPanel">
+                        <f:facet name="start">
+                            <h:graphicImage library="images" name="ajaxloading.gif" />
+                        </f:facet>
+
+                        <f:facet name="complete">
+                            <h:outputText value="" />
+                        </f:facet>
+                    </p:ajaxStatus>
+
+                    <ui:include src="/WEB-INF/templates/includes/header.xhtml"/>
+                    <ui:insert name="content" />
+                </p:layoutUnit>
+            </p:layout>
+
+            <ui:include src="/WEB-INF/pages/includes/connectionDialog.xhtml"/>
+            <ui:include src="/WEB-INF/pages/includes/createConnectionAdvancedProperty.xhtml"/>
+            <ui:include src="/WEB-INF/pages/includes/sendMessageDialog.xhtml"/>
+            <ui:include src="/WEB-INF/pages/includes/createMapMessage.xhtml"/>
+            <ui:include src="/WEB-INF/pages/includes/createMessageHeaders.xhtml"/>
+            <ui:include src="/WEB-INF/pages/includes/createMessageProperties.xhtml"/>
+            <ui:include src="/WEB-INF/pages/includes/receiveMessageDialog.xhtml"/>
+            <ui:include src="/WEB-INF/pages/includes/disconnectionConfirmDialog.xhtml"/>
+        </h:body>
+    </f:view>
+</html>
