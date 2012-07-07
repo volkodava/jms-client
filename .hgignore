@@ -18,6 +18,8 @@ target/
 maven_repo/
 database/
 activemq-*/
+private_send.bat
+private_send.sh
 
 syntax: regexp
 .*\.[Tt][Mm][Pp]$
